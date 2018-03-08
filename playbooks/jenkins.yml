@@ -212,5 +212,5 @@
         headers:
           Jenkins-Crumb: "{{ crumb.content.split(':')[1] }}"
       with_items:
-      - checkbox.io_job
+      # - checkbox.io_job
       - iTrust2_job
