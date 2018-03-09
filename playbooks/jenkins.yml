@@ -81,6 +81,12 @@
         regexp: '^#--httpListenAddress=$HTTP_HOST (default 0.0.0.0)'
         line: '--httpListenAddress=$HTTP_HOST (default 0.0.0.0)'
 
+    - name: Change Jenkins port
+      lineinfile:
+        dest: /etc/default/jenkins
+        regexp: '^HTTP_PORT='
+        line: 'HTTP_PORT=8081'
+
     - name: Restart Jenkins
       become: yes
       service:
@@ -88,7 +94,7 @@
         state: restarted
 
     - name: Wait for Jenkins
-      shell: "curl -D - --silent --max-time 5 http://{{ jenkins_ip_address }}:8080/cli/"
+      shell: "curl -D - --silent --max-time 5 http://{{ jenkins_ip_address }}:8081/cli/"
       register: result
       until: (result.stdout.find("403 Forbidden") != -1) or (result.stdout.find("200 OK") != -1) and (result.stdout.find("Please wait while") == -1)
       retries: 50
@@ -115,7 +121,7 @@
         state: restarted
 
     - name: Wait for Jenkins
-      shell: "curl -D - --silent --max-time 5 http://{{ jenkins_ip_address }}:8080/cli/"
+      shell: "curl -D - --silent --max-time 5 http://{{ jenkins_ip_address }}:8081/cli/"
       register: result
       until: (result.stdout.find("403 Forbidden") != -1) or (result.stdout.find("200 OK") != -1) and (result.stdout.find("Please wait while") == -1)
       retries: 50
@@ -145,7 +151,7 @@
         state: restarted
 
     - name: Wait for Jenkins
-      shell: "curl -D - --silent --max-time 5 http://{{ jenkins_ip_address }}:8080/cli/"
+      shell: "curl -D - --silent --max-time 5 http://{{ jenkins_ip_address }}:8081/cli/"
       register: result
       until: (result.stdout.find("403 Forbidden") != -1) or (result.stdout.find("200 OK") != -1) and (result.stdout.find("Please wait while") == -1)
       retries: 50
@@ -194,7 +200,7 @@
 
     - name: Get Jenkins crumb
       uri:
-        url: 'http://127.0.0.1:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)'
+        url: 'http://127.0.0.1:8081/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)'
         user: "{{ jenkins_username }}"
         password: "{{ jenkins_password }}"
         force_basic_auth: yes
@@ -204,7 +210,7 @@
     - name: Trigger builds
       uri:
         method: POST
-        url: "http://127.0.0.1:8080/job/{{ item }}/build"
+        url: "http://127.0.0.1:8081/job/{{ item }}/build"
         user: "{{ jenkins_username }}"
         password: "{{ jenkins_password }}"
         force_basic_auth: yes
