@@ -2,7 +2,7 @@
 - hosts: jenkins
 
   vars_files:
-    - /home/vagrant/share/JenkinsProvisioner/vars/main.yml
+    - /home/vagrant/share/JenkinsTestAnalysis/vars/main.yml
 
   become: yes
 
