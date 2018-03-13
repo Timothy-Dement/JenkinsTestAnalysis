@@ -55,6 +55,11 @@
       apt:
         name: nodejs
 
+    - name: Remove iTrust2 directory if present
+      file:
+        state: absent
+        path: /home/{{ ansible_user }}/iTrust2-v1/
+
     - name: Clone iTrust2-v1 repository
       git:
         repo: https://{{ lookup('env', 'GITHUB_USERNAME') }}:{{ lookup('env', 'GITHUB_PASSWORD') }}@github.ncsu.edu/tmdement/iTrust2-v1.git

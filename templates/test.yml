@@ -67,11 +67,11 @@
                 unhealthy: 0
       - post-tasks:
           - matches:
-              - log-text: git
-                operator: AND
-              escalate-status: true
-              run-if-job-successful: true
-              script: 'cd /home/{{ ansible_user }}/iTrust2-v1/ && sudo git reset --hard HEAD~'
+            - log-text: git
+              operator: AND
+            escalate-status: true
+            run-if-job-successful: true
+            script: 'cd /home/{{ ansible_user }}/iTrust2-v1/ && sudo git reset --hard HEAD~'
       - archive:
           artifacts: 'iTrust2/target/surefire-reports/*.xml'
 
