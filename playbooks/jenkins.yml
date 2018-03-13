@@ -55,21 +55,23 @@
       apt:
         name: nodejs
 
-    # - name: Symlink nodejs and node
-    #   file:
-    #     src: /usr/bin/nodejs
-    #     dest: /usr/bin/node
-    #     state: link
+    - name: Clone iTrust2-v1 repository
+      git:
+        repo: https://{{ lookup('env', 'GITHUB_USERNAME') }}:{{ lookup('env', 'GITHUB_PASSWORD') }}@github.ncsu.edu/tmdement/iTrust2-v1.git
+        dest: /home/{{ ansible_user }}/iTrust2-v1
+        force: yes
 
-    # - name: Clone JenkinsProvisioner repository
-    #   git:
-    #     repo: https://{{ lookup('env', 'GITHUB_USERNAME') }}:{{ lookup('env', 'GITHUB_PASSWORD') }}@github.ncsu.edu/tmdement/JenkinsProvisioner.git
-    #     dest: /home/{{ ansible_user }}/JenkinsProvisioner
-    #     force: yes
+    - name: Create fuzzer branch
+      shell: 'git checkout -b fuzzer'
+      args:
+        chdir: /home/{{ ansible_user }}/iTrust2-v1
 
-    # - name: Install JenkinsProvisioner packages
-    #   npm:
-    #     path: /home/{{ ansible_user }}/JenkinsProvisioner
+    - name: Add post-commit hook
+      template:
+        src: /home/vagrant/share/JenkinsTestAnalysis/templates/post-commit
+        dest: "/home/{{ ansible_user }}/iTrust2-v1/.git/hooks/"
+        force: yes
+        mode: a+x
 
     - name: Set AWS and GitHub environment variables
       lineinfile:
@@ -174,6 +176,17 @@
         timeout: 30
         updates_expiration: 86400
 
+    - name: Instal git Jenkins plugin
+      jenkins_plugin:
+        name: git
+        params:
+          url_username: "{{ jenkins_username }}"
+        url_password: "{{ jenkins_password }}"
+        url: http://localhost:8081
+        with_dependencies: yes
+        timeout: 30
+        updates_expiration: 86400
+
     - name: Add sudo permissions for jenkins user
       lineinfile:
         path: /etc/sudoers
@@ -242,16 +255,16 @@
         return_content: yes
       register: crumb
 
-    - name: Trigger builds
-      uri:
-        method: POST
-        url: "http://127.0.0.1:8081/job/{{ item }}/build"
-        user: "{{ jenkins_username }}"
-        password: "{{ jenkins_password }}"
-        force_basic_auth: yes
-        status_code: 201
-        headers:
-          Jenkins-Crumb: "{{ crumb.content.split(':')[1] }}"
-      with_items:
-      - project_checkbox_job
-      - project_itrust_job
+    # - name: Trigger builds
+    #   uri:
+    #     method: POST
+    #     url: "http://127.0.0.1:8081/job/{{ item }}/build"
+    #     user: "{{ jenkins_username }}"
+    #     password: "{{ jenkins_password }}"
+    #     force_basic_auth: yes
+    #     status_code: 201
+    #     headers:
+    #       Jenkins-Crumb: "{{ crumb.content.split(':')[1] }}"
+    #   with_items:
+    #   - project_checkbox_job
+    #   - project_itrust_job

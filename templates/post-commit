@@ -1,0 +1,2 @@
+#!/bin/bash
+curl http://localhost:8081/git/notifyCommit?url=file:///home/{{ ansible_user }}/iTrust2-v1
