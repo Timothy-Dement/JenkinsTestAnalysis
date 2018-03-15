@@ -1,0 +1,51 @@
+---
+- hosts: jenkins
+
+  vars_files:
+    - /home/vagrant/share/JenkinsTestAnalysis/vars/main.yml
+
+  become: yes
+
+  tasks:
+    - name: Make a directory for the tool
+      file:
+        path: "/home/{{ ansible_user }}/FuzzerTool"
+        state: directory
+
+    - name: Copy files into FuzzerTool directory
+      template:
+        src: "{{ item }}"
+        dest: "/home/{{ ansible_user }}/FuzzerTool/"
+        force: yes
+      with_items:
+        - /home/vagrant/share/JenkinsTestAnalysis/templates/package.json
+        - /home/vagrant/share/JenkinsTestAnalysis/templates/server.js
+
+    - name: Install node packages
+      npm:
+        path: "/home/{{ ansible_user }}/FuzzerTool/"
+        state: latest
+
+    - name: Install global npm packages
+      npm:
+        name: "{{ item }}"
+        global: yes
+      with_items:
+        - forever
+        - shelljs
+        - delay
+      become: yes
+
+    - name: Setup the FuzzerTool
+      become: yes
+      shell: 'forever start server.js'
+      args:
+        chdir: "/home/{{ ansible_user }}/FuzzerTool/"
+
+    - name: Start the FuzzerTool
+      shell: 'curl http://localhost:8082/runFuzzer'
+      register:
+        - response
+
+    - name: Debug
+      debug: response
