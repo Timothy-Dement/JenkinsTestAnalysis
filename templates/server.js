@@ -13,16 +13,16 @@ app.get('/runFuzzer',function(req,res){
   //to stop the build from continuing
   if(commitCount<=COMMIT_LIMIT)
   {
-    shell.cd('/home/vagrant/iTrust2-v1/');
+    shell.cd('/home/{{ ansible_user }}/iTrust2-v1/');
     shell.touch(String(commitCount));
     shell.exec("git add .");
     shell.exec(`git commit -m "test commit B${String(commitCount)}"`);
     setTimeout(function(){  //delay required as it takes time for build to start and we dont want to revert before that
-      shell.cd('/home/vagrant/iTrust2-v1/')
+      shell.cd('/home/{{ ansible_user }}/iTrust2-v1/')
       shell.exec('git reset --hard HEAD~ ');
     },30000);
     commitCount++;//keeps track of how many builds are executed
-    shell.cd('/home/vagrant');
+    shell.cd('/home/{{ ansible_user }}');
   }
 });
 
