@@ -4,8 +4,6 @@
   vars_files:
     - /home/vagrant/share/JenkinsTestAnalysis/vars/main.yml
 
-  become: yes
-
   tasks:
     - name: Make a directory for the tool
       file:
