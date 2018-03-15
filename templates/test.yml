@@ -71,7 +71,7 @@
               operator: AND
             escalate-status: true
             run-if-job-successful: true
-            script: 'cd /home/{{ ansible_user }}/iTrust2-v1/ && sudo git reset --hard HEAD~'
+            script: 'curl http://localhost:8082/runFuzzer'
       - archive:
           artifacts: 'iTrust2/target/surefire-reports/*.xml'
 
