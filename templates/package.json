@@ -10,8 +10,6 @@
   "author": "Sourabh Saha",
   "license": "ISC",
   "dependencies": {
-    "delay": "^2.0.0",
-    "express": "^4.16.3",
     "shelljs": "^0.8.1"
   }
 }

@@ -26,24 +26,11 @@
 
     - name: Install global npm packages
       npm:
-        name: "{{ item }}"
+        name: shelljs
         global: yes
-      with_items:
-        - forever
-        - shelljs
-        - delay
       become: yes
-
-    - name: Setup the FuzzerTool
-      become: yes
-      shell: 'forever start server.js'
-      args:
-        chdir: "/home/{{ ansible_user }}/FuzzerTool/"
 
     - name: Start the FuzzerTool
-      shell: 'curl http://localhost:8082/runFuzzer'
-      register:
-        - response
-
-    - name: Debug
-      debug: response
+      shell: 'cmd="node server.js"; for i in $(seq 5); do $cmd; sleep 40; done'
+      args:
+        chdir: "/home/{{ ansible_user }}/FuzzerTool"

@@ -1,2 +1,6 @@
-#!/bin/bash
-curl http://localhost:8081/git/notifyCommit?url=file:///home/{{ ansible_user }}/iTrust2-v1
+#!/bin/sh
+if  git log -1 | grep -q 'revert' > /dev/null; then
+        echo "Found revert"
+else
+        curl http://localhost:8081/git/notifyCommit?url=file:///home/{{ ansible_user }}/iTrust2-v1
+fi
