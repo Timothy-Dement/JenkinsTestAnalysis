@@ -4,7 +4,7 @@ var jenkinsapi = require('jenkins-api');
 var fs = require('fs'), xml2js = require('xml2js');
 
 var jenkins = jenkinsapi.init('http://admin:admin@localhost:8080/');
-const COMMIT_LIMIT=5;
+const COMMIT_LIMIT=Number(process.argv[2]);
 var lastBuildNumber = 0;
 var testResults = {};
 

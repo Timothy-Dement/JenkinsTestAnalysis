@@ -38,6 +38,6 @@
         chdir: "/home/{{ ansible_user }}/FuzzerTool/"
 
     - name: Start the Test Analysis FuzzerTool
-      shell: 'node testAnalysis.js'
+      shell: 'node testAnalysis.js 5'
       args:
         chdir: "/home/{{ ansible_user }}/FuzzerTool/"
