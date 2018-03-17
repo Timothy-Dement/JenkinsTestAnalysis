@@ -35,7 +35,7 @@ function getSourceFilePaths()
     
         for (j = 0; j < files.length; j++)
         {
-            if (files[j].endsWith('.java'))
+            if (files[j].endsWith('.java') && files[j] !== 'PasswordResetToken.java')
             {
                 candidateFiles.push(pathPrefix + directories[i] + '/' + files[j]);
             }
@@ -62,7 +62,7 @@ function mutateStrings(fileContent)
 
     // Replace all substrings between quotation marks with random string
 
-    var stringPattern = RegExp('"[^"]+"', 'g');
+    var stringPattern = RegExp('"[^"\/()]+"', 'g');
 
     alteredFileContent = alteredFileContent.replace(stringPattern, randomString);
     
@@ -200,6 +200,8 @@ function swapZeroOne(fileContent)
 
 var allFiles = getSourceFilePaths();
 
+console.log(allFiles.length);
+
 var compilationFailure = true;
 
 while (compilationFailure)
@@ -210,7 +212,7 @@ while (compilationFailure)
 
     while (selectedFiles.length < 10)
     {
-        var file = allFiles[Math.floor(Math.random() * 86)];
+        var file = allFiles[Math.floor(Math.random() * 85)];
         if(!_.contains(selectedFiles, file)) selectedFiles.push(file);
     }
 
@@ -249,7 +251,7 @@ while (compilationFailure)
     console.log('\nTesting compilaiton...\n');
 
     if (shell.exec('cd ../iTrust2-v1/iTrust2 && sudo mvn compile').code === 0) compilationFailure = false;
-    else shell.exec('cd ../iTrust2-v1 && git checkout -- .');
+    else shell.exec('cd ../iTrust2-v1/ && git checkout -- .');
 
     console.log();
 }
