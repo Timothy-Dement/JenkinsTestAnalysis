@@ -1,11 +1,13 @@
 var shell = require('shelljs');
-var commitCount=1;
-shell.cd('/home/vagrant/iTrust2-v1/');
-shell.rm('-rf','1');
-shell.touch(String(commitCount));
+
+shell.cd('/home/{{ ansible_user }}/FuzzerTool');
+shell.exec('node fuzzer.js');
+
+shell.cd('/home/{{ ansible_user }}/iTrust2-v1');
 shell.exec("git add .");
-shell.exec(`git commit -m "test commit B${String(commitCount)}"`);
+shell.exec(`git commit -m "test commit"`);
+
 setTimeout(function(){
 	shell.cd('/home/vagrant/iTrust2-v1/');
 	shell.exec("git revert HEAD");
-},10000);
+}, 10000);

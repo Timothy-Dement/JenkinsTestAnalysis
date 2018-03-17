@@ -19,6 +19,7 @@
         - /home/vagrant/share/JenkinsTestAnalysis/templates/package.json
         - /home/vagrant/share/JenkinsTestAnalysis/templates/fuzzerTool.js
         - /home/vagrant/share/JenkinsTestAnalysis/templates/testAnalysis.js
+        - /home/vagrant/share/JenkinsTestAnalysis/templates/fuzzer.js
 
     - name: Install node packages
       npm:
