@@ -248,7 +248,7 @@ while (compilationFailure)
 
     console.log('\nTesting compilaiton...\n');
 
-    if (shell.exec('cd ../iTrust2-v1/iTrust2-v1/iTrust2 && sudo mvn compile').code === 0) compilationFailure = false;
+    if (shell.exec('cd ../iTrust2-v1/iTrust2 && sudo mvn compile').code === 0) compilationFailure = false;
     else shell.exec('cd ../iTrust2-v1 && git checkout -- .');
 
     console.log();
