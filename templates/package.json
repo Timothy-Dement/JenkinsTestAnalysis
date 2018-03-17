@@ -5,11 +5,15 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node fuzzerTool.js"
   },
   "author": "Sourabh Saha",
   "license": "ISC",
   "dependencies": {
-    "shelljs": "^0.8.1"
+    "delay": "^2.0.0",
+    "express": "^4.16.3",
+    "jenkins-api": "^0.3.1",
+    "shelljs": "^0.8.1",
+    "xml2js": "^0.4.19"
   }
 }

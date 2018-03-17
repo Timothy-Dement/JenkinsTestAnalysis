@@ -17,7 +17,8 @@
         force: yes
       with_items:
         - /home/vagrant/share/JenkinsTestAnalysis/templates/package.json
-        - /home/vagrant/share/JenkinsTestAnalysis/templates/server.js
+        - /home/vagrant/share/JenkinsTestAnalysis/templates/fuzzerTool.js
+        - /home/vagrant/share/JenkinsTestAnalysis/templates/testAnalysis.js
 
     - name: Install node packages
       npm:
@@ -31,6 +32,11 @@
       become: yes
 
     - name: Start the FuzzerTool
-      shell: 'cmd="node server.js"; for i in $(seq 5); do $cmd; sleep 40; done'
+      shell: 'cmd="node fuzzerTool.js"; for i in $(seq 5); do $cmd; sleep 40; done'
       args:
-        chdir: "/home/{{ ansible_user }}/FuzzerTool"
+        chdir: "/home/{{ ansible_user }}/FuzzerTool/"
+
+    - name: Start the Test Analysis FuzzerTool
+      shell: 'node testAnalysis.js'
+      args:
+        chdir: "/home/{{ ansible_user }}/FuzzerTool/"
