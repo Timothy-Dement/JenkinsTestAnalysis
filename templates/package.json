@@ -14,6 +14,7 @@
     "express": "^4.16.3",
     "jenkins-api": "^0.3.1",
     "shelljs": "^0.8.1",
-    "xml2js": "^0.4.19"
+    "xml2js": "^0.4.19",
+    "underscore": "^1.8.3"
   }
 }
