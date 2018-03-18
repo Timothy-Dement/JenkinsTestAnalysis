@@ -10,7 +10,7 @@
     MONGO_PASSWORD: "root"
 
   tasks:
-    
+
     - name: Install Git, Nodejs, NPM
       apt:
         name: "{{ item }}"
@@ -19,7 +19,7 @@
       - "git"
       - "nodejs-legacy"
       - "npm"
-   
+
     - name: Add Mongodb ppa key
       become: yes
       apt_key:
@@ -43,7 +43,7 @@
         - mongodb-org-shell
         - mongodb-org-mongos
         - mongodb-org-tools
-    
+
     - name: Installing Python-Pip
       apt:
         pkg: python-pip
@@ -56,7 +56,7 @@
 
     - name: Install the latest pymongo package
       pip: name=pymongo state=latest use_mirrors=no
-    
+
     - name: Install nginx
       become: yes
       apt:
@@ -110,7 +110,7 @@
         dest: /home/{{ansible_ssh_user}}/Checkbox/local-conf/default
         regexp: '/Users/gameweld/bitbucket/checkbox.io/checkbox.io/public_html'
         replace: '/home/{{ansible_ssh_user}}/Checkbox/public_html'
-    
+
     # - name: Copy default to different location
     #   copy:
     #     src: /home/{{ansible_ssh_user}}/Checkbox/local-conf/default
@@ -134,10 +134,10 @@
 
     - name: Install forever
       npm: name=forever global=yes state=present
-    
+
     - name: Start application
       command: forever start /home/{{ansible_ssh_user}}/Checkbox/server-side/site/server.js
-     
+
     - name: restart nginx
       service: name=nginx state=restarted enabled=yes
 
