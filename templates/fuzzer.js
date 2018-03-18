@@ -286,7 +286,7 @@ while (compilationFailure)
     {
         var fuzzingOperation = Math.floor(Math.random() * 4);
 
-        var content = fs.readFileSync(selectedFiles[n]);
+        var content = String(fs.readFileSync(selectedFiles[n]));
 
         if (fuzzingOperation === 0)
         {
