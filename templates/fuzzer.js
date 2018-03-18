@@ -35,7 +35,7 @@ function getSourceFilePaths()
     
         for (j = 0; j < files.length; j++)
         {
-            if (files[j].endsWith('.java') && files[j] !== 'PasswordResetToken.java')
+            if (files[j].endsWith('.java'))
             {
                 candidateFiles.push(pathPrefix + directories[i] + '/' + files[j]);
             }
@@ -46,157 +46,223 @@ function getSourceFilePaths()
 
 function mutateStrings(fileContent)
 {
-    var alteredFileContent = fileContent;
+    var lines = fileContent.split('\n');
 
-    // Generate a random string
+    var alteredFileContent = '';
 
-    var randomString = '"';
-
-    for (i = 0; i < 10; i++)
+    for (y = 0; y < lines.length; y++)
     {
-        var charCode = Math.floor(Math.random() * 95) + 32;
-        randomString += String.fromCharCode(charCode);
+        if (lines[y].match(/".*\/.*"/g) !== null || lines[y].includes('while') || lines[y].includes('@') || !/"[^"]+"/g.test(lines[y]))
+        {
+            alteredFileContent += lines[y] + '\n';
+        }
+        else
+        {
+            // Generate a random string
+
+            var randomString = '"';
+
+            for (i = 0; i < 10; i++)
+            {
+                var charCode = Math.floor(Math.random() * 26) + 65;
+                randomString += String.fromCharCode(charCode);
+            }
+
+            randomString += '"';
+
+            // Replace all substrings between quotation marks with random string
+
+            var stringPattern = RegExp('"[^"]+"', 'g');
+
+            console.log(lines[y].match(stringPattern));
+
+            var alteredLine = lines[y].replace(stringPattern, randomString);
+
+            alteredFileContent += alteredLine + '\n';
+        }
     }
 
-    randomString += '"';
-
-    // Replace all substrings between quotation marks with random string
-
-    var stringPattern = RegExp('"[^"\/()]+"', 'g');
-
-    alteredFileContent = alteredFileContent.replace(stringPattern, randomString);
-    
     return alteredFileContent;
 }
 
 function swapGtLt(fileContent)
 {
-    var alteredFileContent = fileContent;
+    var lines = fileContent.split('\n');
 
-    // Find indices of all > characters
+    var alteredFileContent = '';
 
-    var gtMatch;
-    var gtIndices = [];
-    var gtPattern = RegExp('>', 'g');
-
-    while ((gtMatch = gtPattern.exec(fileContent)) !== null)
+    for (y = 0; y < lines.length; y++)
     {
-        gtIndices.push(gtPattern.lastIndex - 1);
+        if (lines[y].match(/".*\/.*"/g) !== null || lines[y].includes('while') || lines[y].includes('@') || (!lines[y].includes('>') && !lines[y].includes('<')))
+        {
+            alteredFileContent += lines[y] + '\n';
+        }
+        else
+        {
+            // Find all indices of > characters
+
+            var gtMatch;
+            var gtIndices = [];
+            var gtPattern = RegExp('>', 'g');
+
+            while ((gtMatch = gtPattern.exec(lines[y])) !== null )
+            {
+                gtIndices.push(gtPattern.lastIndex - 1);
+            }
+
+            // Find all indices of < characters
+
+            var ltMatch;
+            var ltIndices = [];
+            var ltPattern = RegExp('<', 'g');
+
+            while ((ltMatch = ltPattern.exec(lines[y])) !== null )
+            {
+                ltIndices.push(ltPattern.lastIndex - 1);
+            }
+
+            var alteredLine = lines[y];
+
+            // Change all > characters to <
+
+            for (j = 0; j < gtIndices.length; j++)
+            {
+                alteredLine = alteredLine.substr(0, gtIndices[j]) + '<' + alteredLine.substr(gtIndices[j] + 1);
+            }
+
+            // Change all < characters to >
+
+            for (j = 0; j < ltIndices.length; j++)
+            {
+                alteredLine = alteredLine.substr(0, ltIndices[j]) + '>' + alteredLine.substr(ltIndices[j] + 1);
+            }
+
+            alteredLine += '\n';
+            alteredFileContent += alteredLine;
+        }
     }
-
-    // Find indices of all < characters
-
-    var ltMatch;
-    var ltIndices = [];
-    var ltPattern = RegExp('<', 'g');
-
-    while ((ltMatch = ltPattern.exec(fileContent)) !== null)
-    {
-        ltIndices.push(ltPattern.lastIndex - 1);
-    }
-
-    // Change all > characters to <
-
-    for (i = 0; i < gtIndices.length; i++)
-    {
-        alteredFileContent = alteredFileContent.substr(0, gtIndices[i]) + '<' + alteredFileContent.substr(gtIndices[i] + 1);
-    }
-
-    // Change all < characters to >
-
-    for (i = 0; i < ltIndices.length; i++)
-    {
-        alteredFileContent = alteredFileContent.substr(0, ltIndices[i]) + '>' + alteredFileContent.substr(ltIndices[i] + 1);
-    }
-
     return alteredFileContent;
 }
 
 function swapEqNeq(fileContent)
 {
-    var alteredFileContent = fileContent;
+    var lines = fileContent.split('\n');
 
-    // Find indices of all == substrings
+    var alteredFileContent = '';
 
-    var eqMatch;
-    var eqIndices = [];
-    var eqPattern = RegExp('==', 'g');
-
-    while ((eqMatch = eqPattern.exec(fileContent)) !== null)
+    for (y = 0; y < lines.length; y++)
     {
-        eqIndices.push(eqPattern.lastIndex - 2);
+        if (lines[y].match(/".*\/.*"/g) !== null || lines[y].includes('while') || lines[y].includes('@') || (!lines[y].includes('==') && !lines[y].includes('!=')))
+        {
+            alteredFileContent += lines[y] + '\n';
+        }
+        else
+        {
+            // Find all indices of == substrings
+
+            var eqMatch;
+            var eqIndices = [];
+            var eqPattern = RegExp('==', 'g');
+
+            while ((eqMatch = eqPattern.exec(lines[y])) !== null )
+            {
+                eqIndices.push(eqPattern.lastIndex - 2);
+            }
+
+            // Find all indices of != substrings
+
+            var neqMatch;
+            var neqIndices = [];
+            var neqPattern = RegExp('!=', 'g');
+
+            while ((neqMatch = neqPattern.exec(lines[y])) !== null )
+            {
+                neqIndices.push(neqPattern.lastIndex - 2);
+            }
+
+            var alteredLine = lines[y];
+
+            // Change all == substrings to !=
+
+            for (j = 0; j < eqIndices.length; j++)
+            {
+                alteredLine = alteredLine.substr(0, eqIndices[j]) + '!' + alteredLine.substr(eqIndices[j] + 1);
+            }
+
+            // Change all != substrings to ==
+
+            for (j = 0; j < neqIndices.length; j++)
+            {
+                alteredLine = alteredLine.substr(0, neqIndices[j]) + '=' + alteredLine.substr(neqIndices[j] + 1);
+            }
+
+            alteredLine += '\n';
+            alteredFileContent += alteredLine;
+        }
     }
-
-    // Find indices of all != substrings
-
-    var neqMatch;
-    var neqIndices = [];
-    var neqPattern = RegExp('!=', 'g');
-
-    while ((neqMatch = neqPattern.exec(fileContent)) !== null)
-    {
-        neqIndices.push(neqPattern.lastIndex - 2);
-    }
-
-    // Change all == substrings to !=
-
-    for (i = 0; i < eqIndices.length; i++)
-    {
-        alteredFileContent = alteredFileContent.substr(0, eqIndices[i]) + '!' + alteredFileContent.substr(eqIndices[i] + 1);
-    }
-
-    // Change all != substrings to ==
-
-    for (i = 0; i < neqIndices.length; i++)
-    {
-        alteredFileContent = alteredFileContent.substr(0, neqIndices[i]) + '=' + alteredFileContent.substr(neqIndices[i] + 1);
-    }
-
     return alteredFileContent;
 }
 
 function swapZeroOne(fileContent)
 {
-    var alteredFileContent = fileContent;
+    var lines = fileContent.split('\n');
 
-    // Find indices of all 0 characters
+    var alteredFileContent = '';
 
-    var zeroMatch;
-    var zeroIndices = [];
-    var zeroPattern = RegExp('0', 'g');
-
-    while ((zeroMatch = zeroPattern.exec(fileContent)) !== null)
+    for (y = 0; y < lines.length; y++)
     {
-        zeroIndices.push(zeroPattern.lastIndex - 1);
+        if (lines[y].match(/".*\/.*"/g) !== null || lines[y].includes('while') || lines[y].includes('@') || (!lines[y].includes('0') && !lines[y].includes('1')))
+        {
+            alteredFileContent += lines[y] + '\n';
+        }
+        else
+        {
+            // Find all indices of 0 characters
+
+            var zeroMatch;
+            var zeroIndices = [];
+            var zeroPattern = RegExp('0', 'g');
+
+            while ((zeroMatch = zeroPattern.exec(lines[y])) !== null )
+            {
+                zeroIndices.push(zeroPattern.lastIndex - 1);
+            }
+
+            // Find all indices of 1 characters
+
+            var oneMatch;
+            var oneIndices = [];
+            var onePattern = RegExp('1', 'g');
+
+            while ((oneMatch = onePattern.exec(lines[y])) !== null )
+            {
+                oneIndices.push(onePattern.lastIndex - 1);
+            }
+
+            // Change all 0 characters to 1
+
+            var alteredLine = lines[y];
+
+            for (j = 0; j < zeroIndices.length; j++)
+            {
+                alteredLine = alteredLine.substr(0, zeroIndices[j]) + '1' + alteredLine.substr(zeroIndices[j] + 1);
+            }
+
+            // Change all 1 characters to 0
+
+            for (j = 0; j < oneIndices.length; j++)
+            {
+                alteredLine = alteredLine.substr(0, oneIndices[j]) + '0' + alteredLine.substr(oneIndices[j] + 1);
+            }
+
+            alteredLine += '\n';
+            alteredFileContent += alteredLine;
+        }
     }
-
-    // Find indices of all 1 characters
-
-    var oneMatch;
-    var oneIndices = [];
-    var onePattern = RegExp('1', 'g');
-
-    while ((oneMatch = onePattern.exec(fileContent)) !== null)
-    {
-        oneIndices.push(onePattern.lastIndex - 1);
-    }
-
-    // Change all 0 characters to 1
-
-    for (i = 0; i < zeroIndices.length; i++)
-    {
-        alteredFileContent = alteredFileContent.substr(0, zeroIndices[i]) + '1' + alteredFileContent.substr(zeroIndices[i] + 1);
-    }
-
-    // Change all 1 characters to 0
-
-    for (i = 0; i < oneIndices.length; i++)
-    {
-        alteredFileContent = alteredFileContent.substr(0, oneIndices[i]) + '0' + alteredFileContent.substr(oneIndices[i] + 1);
-    }
-
     return alteredFileContent;
 }
+
+// ----------------------------------------------------------------------------------------------------
 
 var allFiles = getSourceFilePaths();
 
@@ -210,9 +276,9 @@ while (compilationFailure)
 
     var selectedFiles = [];
 
-    while (selectedFiles.length < 10)
+    while (selectedFiles.length < 5)
     {
-        var file = allFiles[Math.floor(Math.random() * 85)];
+        var file = allFiles[Math.floor(Math.random() * 86)];
         if(!_.contains(selectedFiles, file)) selectedFiles.push(file);
     }
 
@@ -220,7 +286,7 @@ while (compilationFailure)
     {
         var fuzzingOperation = Math.floor(Math.random() * 4);
 
-        var content = String(fs.readFileSync(selectedFiles[n]));
+        var content = fs.readFileSync(selectedFiles[n]);
 
         if (fuzzingOperation === 0)
         {
