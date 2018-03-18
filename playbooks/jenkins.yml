@@ -260,6 +260,19 @@
         return_content: yes
       register: crumb
 
+    - name: Create the mongodb data directory
+      file:
+        dest: /data/db
+        state: directory
+
+    - name: Copy the mongodb service
+      become: yes
+      template:
+        src: /home/vagrant/share/JenkinsTestAnalysis/templates/mongodb.service
+        dest: "/etc/systemd/system/mongodb.service"
+        force: yes
+
+
     # - name: Trigger builds
     #   uri:
     #     method: POST
