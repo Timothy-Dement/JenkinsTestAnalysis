@@ -1,5 +1,5 @@
 - name: Setup Checkbox
-  hosts: checkbox
+  hosts: jenkins
   become: yes
   gather_facts: false
   # vars:
