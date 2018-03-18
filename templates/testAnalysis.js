@@ -13,7 +13,7 @@ shell.cd('/home/{{ ansible_user }}/');
 shell.mkdir('-p','test-analysis');
 
 //get the last build information
-jenkins.last_build_info('itrust-job',function(err, data) {
+jenkins.last_build_info('project_itrust_job',function(err, data) {
 
   if (err){ return console.log(err); }
 
@@ -27,11 +27,11 @@ jenkins.last_build_info('itrust-job',function(err, data) {
 function aggregateResults(n,i){
   let build = String(n-i);
   testResults[build] = {};
-  shell.ls(`/var/lib/jenkins/jobs/itrust-job/builds/${n-i}/archive/iTrust2/target/surefire-reports/`).forEach(function(file,index,array){
+  shell.ls(`/var/lib/jenkins/jobs/project_itrust_job/builds/${n-i}/archive/iTrust2/target/surefire-reports/`).forEach(function(file,index,array){
     var parser = new xml2js.Parser();
     testResults[build] = {};
 
-    fs.readFile(`/var/lib/jenkins/jobs/itrust-job/builds/${n-i}/archive/iTrust2/target/surefire-reports/${file}`, function(err, data) {
+    fs.readFile(`/var/lib/jenkins/jobs/project_itrust_job/builds/${n-i}/archive/iTrust2/target/surefire-reports/${file}`, function(err, data) {
       parser.parseString(data, function (err, result) {
         result.testsuite.testcase.forEach(function(test,index,array){
           testResults[build][test['$'].name] = {time:test['$'].time,success:test.hasOwnProperty('failure')?0:1};

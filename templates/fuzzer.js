@@ -74,8 +74,6 @@ function mutateStrings(fileContent)
 
             var stringPattern = RegExp('"[^"]+"', 'g');
 
-            console.log(lines[y].match(stringPattern));
-
             var alteredLine = lines[y].replace(stringPattern, randomString);
 
             alteredFileContent += alteredLine + '\n';
@@ -266,8 +264,6 @@ function swapZeroOne(fileContent)
 
 var allFiles = getSourceFilePaths();
 
-console.log(allFiles.length);
-
 var compilationFailure = true;
 
 while (compilationFailure)
@@ -276,7 +272,7 @@ while (compilationFailure)
 
     var selectedFiles = [];
 
-    while (selectedFiles.length < 5)
+    while (selectedFiles.length < 10)
     {
         var file = allFiles[Math.floor(Math.random() * 86)];
         if(!_.contains(selectedFiles, file)) selectedFiles.push(file);

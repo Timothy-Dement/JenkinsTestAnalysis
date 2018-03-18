@@ -65,13 +65,6 @@
             - class:
                 healthy: 0
                 unhealthy: 0
-      - post-tasks:
-          - matches:
-            - log-text: git
-              operator: AND
-            escalate-status: true
-            run-if-job-successful: true
-            script: 'curl http://localhost:8082/runFuzzer'
       - archive:
           artifacts: 'iTrust2/target/surefire-reports/*.xml'
 
