@@ -3,8 +3,17 @@
 
   vars_files:
     - /home/vagrant/share/JenkinsTestAnalysis/vars/main.yml
+  
+  vars:
+    num_runs: 100
 
   tasks:
+
+    - name: Remove FuzzerTool directory if it exists
+      file:
+        state: absent
+        path: "/home/{{ ansible_user }}/FuzzerTool"
+
     - name: Make a directory for the tool
       file:
         path: "/home/{{ ansible_user }}/FuzzerTool"
@@ -33,11 +42,14 @@
       become: yes
 
     - name: Start the FuzzerTool
-      shell: 'cmd="node fuzzerTool.js"; for i in $(seq 5); do $cmd; sleep 40; done'
+      become: yes
+      shell: 'node fuzzerTool.js; sleep 30'
       args:
         chdir: "/home/{{ ansible_user }}/FuzzerTool/"
+      with_sequence: "count={{ num_runs }}"
 
     - name: Start the Test Analysis FuzzerTool
-      shell: 'node testAnalysis.js 5'
+      become: yes
+      shell: "node testAnalysis.js {{ num_runs }}"
       args:
         chdir: "/home/{{ ansible_user }}/FuzzerTool/"
