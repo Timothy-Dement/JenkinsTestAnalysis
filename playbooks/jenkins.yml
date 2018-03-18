@@ -272,7 +272,6 @@
         dest: "/etc/systemd/system/mongodb.service"
         force: yes
 
-
     # - name: Trigger builds
     #   uri:
     #     method: POST

@@ -1,31 +1,19 @@
 - name: Setup Checkbox
   hosts: jenkins
   become: yes
-
+  gather_facts: false
   # vars:
   environment:
     MONGO_PORT: "3002"
     MONGO_IP: "localhost"
     MONGO_USER: "admin"
     MONGO_PASSWORD: "root"
-
   tasks:
-
-    - name: Install Git, Nodejs, NPM
-      apt:
-        name: "{{ item }}"
-        update_cache: yes
-      with_items:
-      - "git"
-      - "nodejs-legacy"
-      - "npm"
-
     - name: Add Mongodb ppa key
       become: yes
       apt_key:
         keyserver: keyserver.ubuntu.com
         id: 7F0CEB10
-
     - name: Add mongodb sources list
       become: yes
       lineinfile:
@@ -33,7 +21,6 @@
         line: "deb http://repo.mongodb.org/apt/ubuntu precise/mongodb-org/3.0 multiverse"
         state: present
         create: yes
-
     - name: Install MongoDB
       become: yes
       apt: name={{ item }}=3.0.7 state=present update_cache=yes
@@ -53,7 +40,6 @@
       apt:
         pkg: python3-pip
         state: latest
-
     - name: Install the latest pymongo package
       pip: name=pymongo state=latest use_mirrors=no
 
@@ -81,6 +67,10 @@
       become: yes
       when: repo_dir.stat.isdir is not defined
 
+    - name: Start MongoDB service
+      become: yes
+      shell: "sudo systemctl start mongodb"
+
     - name: Create MongoDb user
       mongodb_user:
         database: "admin"
@@ -89,7 +79,7 @@
         roles: readWriteAnyDatabase,dbAdmin,userAdminAnyDatabase
 
     - name: Export MONGO_USER environment variable
-      shell: 'echo "export MONGO_TEST=admin" >> /etc/environment'
+      shell: 'echo "export MONGO_USER=admin" >> /etc/environment'
 
     - name: Export MONGO_PORT environment variable
       shell: 'echo "export MONGO_PORT=3002" >> /etc/environment'
@@ -97,8 +87,17 @@
     - name: Export MONGO_PASS environment variable
       shell: 'echo "export MONGO_PASSWORD=root" >> /etc/environment'
 
+    - name: Export MAIL_SMTP environment variable
+      shell: 'echo "export MAIL_SMTP=smtp.gmail.com" >> /etc/environment'
+
+    - name: Export MAIL_USER environment variable
+      shell: 'echo "export MAIL_USER=csc519devopspipeliners@gmail.com" >> /etc/environment'
+
+    - name: Export MAIL_PASSWORD environment variable
+      shell: 'echo "export MAIL_PASSWORD=devops@2018" >> /etc/environment'
+
     - name: Export MONGO_IP environment variable
-      shell: 'echo "export MONGO_IP=local_host" >> /etc/environment'
+      shell: 'echo "export MONGO_IP=localhost" >> /etc/environment'
 
     - name: install packages
       npm:
@@ -118,7 +117,7 @@
     #     remote_src: yes
 
     - name: Copy default to different location
-      shell: "cp /home/ubuntu/Checkbox/local-conf/default /etc/nginx/sites-available/default"
+      shell: "cp /home/{{ ansible_user }}/Checkbox/local-conf/default /etc/nginx/sites-available/default"
 
     # - name: Copy nginx to diferent location
     #   copy:
@@ -127,19 +126,27 @@
     #     remote_src: yes
 
     - name: Copy nginx to diferent location
-      shell: "cp /home/ubuntu/Checkbox/local-conf/nginx.conf /etc/nginx/nginx.conf"
+      shell: "cp /home/vagrant/Checkbox/local-conf/nginx.conf /etc/nginx/nginx.conf"
 
     - name: restart nginx
-      service: name=nginx state=restarted enabled=yes
+      service: name=nginx state=stopped enabled=no
 
-    - name: Install forever
-      npm: name=forever global=yes state=present
+    - name: Remove forever
+      npm: name=forever global=yes state=absent
 
-    - name: Start application
-      command: forever start /home/{{ansible_ssh_user}}/Checkbox/server-side/site/server.js
+    - name: Install pm2
+      npm: name=pm2 global=yes state=latest
+
+    - name: Install istanbul
+      npm: name=istanbul global=yes state=present
 
     - name: restart nginx
-      service: name=nginx state=restarted enabled=yes
+      service: name=nginx state=started enabled=no
+
+    - name: Start the server
+      shell: "pm2 start server.js"
+      args:
+        chdir: "/home/{{ ansible_ssh_user }}/Checkbox/server-side/site/"
 
 #resources: https://docs.mongodb.com/getting-started/shell/tutorial/install-mongodb-on-ubuntu/
 #https://stackoverflow.com/questions/20919222/ansible-hangs-when-starting-node-js-server
