@@ -1,0 +1,96 @@
+
+    {
+      "id": "544c02e38387ea9425000016",
+      "votes": 16,
+      "name": "Autogit Study",
+      "status": "open",
+      "goal": "30",
+      "awards": [],
+      "studyKind": "dataStudy",
+      "link": "http://checkbox.io/studies/?id=544c02e38387ea9425000016",
+      "description": ""
+    }
+    {
+      "id": "589b5072b072c44415000003",
+      "votes": 11,
+      "name": "Greenkeeper.io Feedback Survey",
+      "status": "open",
+      "goal": "100",
+      "awards": [
+        {
+          "kind": "Amazon Gift Card",
+          "description": "Three $50 amazon gift certificates will be randomly awarded to participants.",
+          "amount": "0"
+        }
+      ],
+      "studyKind": "survey",
+      "link": "http://checkbox.io/studies/?id=589b5072b072c44415000003",
+      "description": "We investigating how developers use greenkeeper.io. Answering this survey will help researchers and tool builders create better practices and tools for dependency management."
+    }
+    {
+      "id": "589b3e70b072c44415000001",
+      "votes": 67,
+      "name": "Survey on Managing Software Dependencies",
+      "status": "open",
+      "goal": "200",
+      "awards": [
+        {
+          "kind": "Amazon Gift Card",
+          "description": "Three $50 amazon gift certificates randomly awarded to participants.",
+          "amount": "0"
+        }
+      ],
+      "studyKind": "survey",
+      "link": "http://checkbox.io/studies/?id=589b3e70b072c44415000001",
+      "description": "We investigating how developers manage software dependencies (apis, libraries, packages, etc.). Answering this survey will help researchers and tool builders create better practices and tools for dependency management."
+    }
+    {
+      "id": "54203b9000b6a6f927000173",
+      "votes": 47,
+      "name": "Research Survey on Future Alternative Programming Environments",
+      "status": "open",
+      "goal": "50",
+      "awards": [
+        {
+          "kind": "Amazon Gift Card",
+          "description": "Two $75 gift certificates given to randomly selected participants.",
+          "amount": "75"
+        }
+      ],
+      "studyKind": "survey",
+      "link": "http://checkbox.io/studies/?id=54203b9000b6a6f927000173",
+      "description": "We are trying to utilize virtual reality (VR) environments to aid in software development. Imagine a few years into the future when we can have virtual reality sunglasses that fit in our pockets. You could put on your sunglasses and instantly be immersed in a whole other environment optimized for your work. Turning your physical head to the side allows you to change your view and see more of the environment. You could pick up a virtual piece of paper off of the ground by actually moving your physical arms. We would like your help to tell us what problems could be solved using such a future virtual reality environment."
+    }
+    {
+      "id": "57bc4b94bd9fe3a30f00005a",
+      "votes": 28486,
+      "name": "HappyFace Frustration Survey 2.0",
+      "status": "open",
+      "goal": "2000",
+      "awards": null,
+      "studyKind": "survey",
+      "link": "http://checkbox.io/studies/?id=57bc4b94bd9fe3a30f00005a",
+      "description": "HappyFace Frustration Survey, 2nd iteration"
+    }
+    {
+      "id": "577d17f5bd9fe3a30f000002",
+      "votes": 7,
+      "name": "Beacons and Layout",
+      "status": "open",
+      "goal": "100",
+      "awards": null,
+      "studyKind": "dataStudy",
+      "link": "http://checkbox.io/studies/?id=577d17f5bd9fe3a30f000002",
+      "description": "Practice human studies"
+    }
+    {
+      "id": "544542d500b6a6f927000368",
+      "votes": 35,
+      "name": "DevFatigue: Research on fatigue in the workplace.",
+      "status": "open",
+      "goal": "100",
+      "awards": [],
+      "studyKind": "dataStudy",
+      "link": "http://checkbox.io/studies/?id=544542d500b6a6f927000368",
+      "description": ""
+    }
