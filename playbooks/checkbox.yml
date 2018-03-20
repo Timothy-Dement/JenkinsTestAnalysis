@@ -67,6 +67,17 @@
       become: yes
       when: repo_dir.stat.isdir is not defined
 
+    - name: Copy the relevant files
+      template:
+        src: {{ item }}
+        dest: "/home/{{ ansible_user }}/Checkbox/server-side/site/"
+        force: yes
+      with_items:
+        - /home/vagrant/share/JenkinsTestAnalysis/templates/generator.js
+        - /home/vagrant/share/JenkinsTestAnalysis/templates/studies.json
+        - /home/vagrant/share/JenkinsTestAnalysis/templates/votes.json
+        - /home/vagrant/share/JenkinsTestAnalysis/templates/coverage.js
+
     - name: Start MongoDB service
       become: yes
       shell: "sudo systemctl start mongodb"
@@ -116,6 +127,17 @@
     #     dest: /etc/nginx/sites-available/default
     #     remote_src: yes
 
+    - name: Add the votes data into the mongo db database
+      shell: "mongoimport --db site --collection votes --drop --file votes.json"
+      args:
+        chdir: "/home/{{ ansible_user }}/Checkbox/server-side/site"
+
+    - name: Add the studies data into the mongo db database
+      shell: "mongoimport --db site --collection studies --drop --file studies.json"
+      args:
+        chdir: "/home/{{ ansible_user }}/Checkbox/server-side/site"
+
+
     - name: Copy default to different location
       shell: "cp /home/{{ ansible_user }}/Checkbox/local-conf/default /etc/nginx/sites-available/default"
 
@@ -134,19 +156,44 @@
     - name: Remove forever
       npm: name=forever global=yes state=absent
 
-    - name: Install pm2
-      npm: name=pm2 global=yes state=latest
-
-    - name: Install istanbul
-      npm: name=istanbul global=yes state=present
+    - name: Install Npm packages
+      npm:
+        name: {{ item }}
+        global: yes
+        state: present
+      with-items:
+        - pm2
+        - istanbul
+        - istanbul-middleware
+        - request
 
     - name: restart nginx
       service: name=nginx state=started enabled=no
 
     - name: Start the server
-      shell: "pm2 start server.js"
+      shell: "pm2 start coverage.js"
       args:
         chdir: "/home/{{ ansible_ssh_user }}/Checkbox/server-side/site/"
+
+    - name: Get Jenkins crumb
+      uri:
+        url: 'http://127.0.0.1:8081/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)'
+        user: "{{ lookup('env', 'JENKINS_USERNAME') }}"
+        password: "{{ lookup('env', 'JENKINS_PASSWORD') }}"
+        force_basic_auth: yes
+        return_content: yes
+      register: crumb
+
+    - name: Trigger builds
+       uri:
+         method: POST
+         url: "http://127.0.0.1:8081/job/project_checkbox_job/build"
+         user: "{{ lookup('env', 'JENKINS_USERNAME') }}"
+         password: "{{ lookup('env', 'JENKINS_PASSWORD') }}"
+         force_basic_auth: yes
+         status_code: 201
+         headers:
+           Jenkins-Crumb: "{{ crumb.content.split(':')[1] }}"
 
 #resources: https://docs.mongodb.com/getting-started/shell/tutorial/install-mongodb-on-ubuntu/
 #https://stackoverflow.com/questions/20919222/ansible-hangs-when-starting-node-js-server
