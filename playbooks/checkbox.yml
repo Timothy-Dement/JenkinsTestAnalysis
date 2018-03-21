@@ -2,10 +2,7 @@
 
   hosts: jenkins
 
-  become: yes
-
   gather_facts: false
-  # vars:
 
   tasks:
     - name: Add Mongodb ppa key
@@ -13,6 +10,7 @@
       apt_key:
         keyserver: keyserver.ubuntu.com
         id: 7F0CEB10
+
     - name: Add mongodb sources list
       become: yes
       lineinfile:
@@ -20,6 +18,11 @@
         line: "deb http://repo.mongodb.org/apt/ubuntu precise/mongodb-org/3.0 multiverse"
         state: present
         create: yes
+
+    - name: Install Unzip
+      become: yes
+      apt: name=unzip state=present update_cache=yes
+
     - name: Install MongoDB
       become: yes
       apt: name={{ item }}=3.0.7 state=present update_cache=yes
@@ -31,15 +34,18 @@
         - mongodb-org-tools
 
     - name: Installing Python-Pip
+      become: yes
       apt:
         pkg: python-pip
         state: latest
 
     - name: Installing Python pip 3
+      become: yes
       apt:
         pkg: python3-pip
         state: latest
     - name: Install the latest pymongo package
+      become: yes
       pip: name=pymongo state=latest use_mirrors=no
 
     - name: Install nginx
@@ -50,21 +56,16 @@
         update_cache: yes
 
     - name: Intsall pymongo
+      become: yes
       pip:
         name: pymongo
         state: present
-
-    - name: Check if cloned repo exists
-      stat:
-        path: /home/{{ ansible_ssh_user }}/checkbox.io
-      register: repo_dir
 
     - name: Clone Checkbox
       git:
         repo: "https://sssaha2:casper234@github.ncsu.edu/tmdement/checkbox.io"
         dest: /home/{{ ansible_user }}/checkbox.io
-      become: yes
-      when: repo_dir.stat.isdir is not defined
+        force: yes
 
     - name: Copy the relevant files
       template:
@@ -79,9 +80,10 @@
 
     - name: Start MongoDB service
       become: yes
-      shell: "sudo systemctl start mongodb"
+      shell: "systemctl start mongodb"
 
     - name: Create MongoDb user
+      become: yes
       mongodb_user:
         database: "admin"
         name: "admin"
@@ -89,24 +91,31 @@
         roles: readWriteAnyDatabase,dbAdmin,userAdminAnyDatabase
 
     - name: Export MONGO_USER environment variable
+      become: yes
       shell: 'echo "export MONGO_USER=admin" >> /etc/environment'
 
     - name: Export MONGO_PORT environment variable
+      become: yes
       shell: 'echo "export MONGO_PORT=3002" >> /etc/environment'
 
     - name: Export MONGO_PASS environment variable
+      become: yes
       shell: 'echo "export MONGO_PASSWORD=root" >> /etc/environment'
 
     - name: Export MAIL_SMTP environment variable
+      become: yes
       shell: 'echo "export MAIL_SMTP=smtp.gmail.com" >> /etc/environment'
 
     - name: Export MAIL_USER environment variable
+      become: yes
       shell: 'echo "export MAIL_USER=csc519devopspipeliners@gmail.com" >> /etc/environment'
 
     - name: Export MAIL_PASSWORD environment variable
+      become: yes
       shell: 'echo "export MAIL_PASSWORD=devops@2018" >> /etc/environment'
 
     - name: Export MONGO_IP environment variable
+      become: yes
       shell: 'echo "export MONGO_IP=localhost" >> /etc/environment'
 
     - name: install packages
@@ -131,30 +140,46 @@
         chdir: "/home/{{ ansible_user }}/checkbox.io/server-side/site"
 
     - name: Copy default to different location
+      become: yes
       shell: "cp /home/{{ ansible_user }}/checkbox.io/local-conf/default /etc/nginx/sites-available/default"
 
     - name: Copy nginx to diferent location
-      shell: "cp /home/vagrant/checkbox.io/local-conf/nginx.conf /etc/nginx/nginx.conf"
+      become: yes
+      shell: "cp /home/{{ ansible_user }}/checkbox.io/local-conf/nginx.conf /etc/nginx/nginx.conf"
 
     - name: restart nginx
+      become: yes
       service: name=nginx state=stopped enabled=no
 
     - name: Remove forever
+      become: yes
       npm: name=forever global=yes state=absent
 
-    - name: Install Npm packages
+    - name: Install pm2 globally
+      become: yes
       npm:
-        name: "{{ item }}"
+        name: pm2
         global: yes
         state: present
+
+    - name: Install checkbox.io npm packages
+      npm:
+        path: "/home/{{ ansible_user }}/checkbox.io/server-side/site"
+
+    - name: Install local npm packages
+      become: yes
+      npm:
+        name: "{{ item }}"
+        path: "/home/{{ ansible_user }}/checkbox.io/server-side/site"
+        state: latest
       with_items:
-        - pm2
-        - istanbul
         - istanbul-middleware
+        - esprima
         - request
         - express
 
     - name: restart nginx
+      become: yes
       service: name=nginx state=started enabled=no
 
     - name: Start the server

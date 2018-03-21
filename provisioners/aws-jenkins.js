@@ -72,10 +72,16 @@ EC2.createKeyPair(createKeyPairParams, function(err, data)
                             ToPort : 27017,
                             IpRanges : [ { 'CidrIp' : '0.0.0.0/0' } ]
                         },
-                                                {
+                        {
                             IpProtocol : 'tcp',
                             FromPort : 80,
                             ToPort : 80,
+                            IpRanges : [ { 'CidrIp' : '0.0.0.0/0' } ]
+                        },
+                        {
+                            IpProtocol : 'tcp',
+                            FromPort : 8888,
+                            ToPort : 8888,
                             IpRanges : [ { 'CidrIp' : '0.0.0.0/0' } ]
                         }
                     ]

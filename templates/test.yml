@@ -2,23 +2,19 @@
     name: '{name}_checkbox_job'
     description: 'Automatically generated test'
     project-type: freestyle
-    scm:
-      - git:
-          url: file://home/{{ ansible_user }}/Checkbox
-          branches:
-            - master
-          wipe-workspace: true
     builders:
       - shell: |
-      cd server-side/site/
-      sudo node generator.js
-      sudo node test.js
-      curl http://localhost:8888/download
-
+      rm -rf *
+      cp -r /home/vagrant/checkbox.io .
+      cd checkbox.io/server-side/site/
+      node generator.js
+      node test.js
+      wget http://localhost:8888/download
+      unzip download
     publishers:
       - html-publisher:
-          name: 'Checkbox'
-          dir: 'coverage/'
+          name: 'coverage report'
+          dir: 'checkbox.io/server-side/site/lcov-report'
           files: "index.html"
 
 - job-template:
