@@ -1,0 +1,30 @@
+{
+    "studyId" : ObjectId("000000000000000000000000"),
+    "fingerprint" : "fingerprint",
+    "ip" : "127.0.0.1",
+    "email" : "test_zero@test.com"
+}
+{
+    "studyId" : ObjectId("000000000000000000000000"),
+    "fingerprint" : "fingerprint",
+    "ip" : "127.0.0.1",
+    "email" : "test_one@test.com"
+}
+{
+    "studyId" : ObjectId("000000000000000000000001"),
+    "files" : [ "" ],
+    "email" : "-"
+}
+{
+    "studyId" : ObjectId("000000000000000000000001"),
+    "files" : [ "" ],
+    "email" : "test@test.com"
+}
+{
+    "studyId" : ObjectId("000000000000000000000002"),
+    "email" : "test@test.com"
+}
+{
+    "studyId" : null,
+    "email" : "test@test.com"
+}

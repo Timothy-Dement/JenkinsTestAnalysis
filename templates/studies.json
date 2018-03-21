@@ -1,0 +1,28 @@
+{
+    "_id" : ObjectId("000000000000000000000000"),
+    "invitecode" : "RESEARCH",
+    "token" : "token_zero",
+    "status" : "open",
+    "studyKind" : "survey"
+}
+{
+    "_id" : ObjectId("000000000000000000000001"),
+    "invitecode" : "RESEARCH",
+    "token" : "token_one",
+    "status" : "awarded",
+    "studyKind" : "dataStudy",
+    "invitecode" : "RESEARCH"
+}
+{
+    "_id" : ObjectId("000000000000000000000002"),
+    "invitecode" : "RESEARCH",
+    "token" : "token_two",
+    "status" : "closed",
+    "studyKind" : "dataStudy",
+    "skipListing" : true
+}
+{
+    "_id" : ObjectId("000000000000000000000003"),
+    "invitecode" : "",
+    "token" : "token_three"
+}
