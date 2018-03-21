@@ -43,7 +43,7 @@
 
     - name: Start the FuzzerTool
       become: yes
-      shell: 'node fuzzerTool.js; sleep 30'
+      shell: 'node fuzzerTool.js; sleep 60'
       args:
         chdir: "/home/{{ ansible_user }}/FuzzerTool/"
       with_sequence: "count={{ num_runs }}"
