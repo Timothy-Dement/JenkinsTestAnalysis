@@ -8,10 +8,10 @@
           branches:
             - master
           wipe-workspace: true
-    triggers:
-      -
-    builders:
-      - shell: |
+    # triggers:
+    #   -
+    # builders:
+    #   - shell: |
 
     publishers:
       - html-publisher:
