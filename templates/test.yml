@@ -8,16 +8,18 @@
           branches:
             - master
           wipe-workspace: true
-    triggers:
-      -
     builders:
       - shell: |
+      cd server-side/site/
+      sudo node generator.js
+      sudo node test.js
+      curl http://localhost:8888/download
 
     publishers:
       - html-publisher:
           name: 'Checkbox'
-          dir: 'TestGeneration/coverage/lcov-report/TestGeneration'
-          files: 'subject.js.html'
+          dir: 'coverage/'
+          files: "index.html"
 
 - job-template:
     name: '{name}_itrust_job'
