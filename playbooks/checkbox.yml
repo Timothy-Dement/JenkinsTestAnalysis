@@ -118,7 +118,7 @@
       shell: "echo \"export MONGO_PASSWORD={{ lookup('env', 'MONGO_PASSWORD') }}\" >> /etc/environment"
 
     - name: Export MAIL_SMTP environment variable
-      shell: "echo \"export MAIL_SMTP=smtp.gmail.com\" >> /etc/environment'
+      shell: "echo \"export MAIL_SMTP=smtp.gmail.com\" >> /etc/environment"
 
     - name: Export MAIL_USER environment variable
       shell: "echo \"export MAIL_USER={{ lookup('env', 'MAIL_USER') }}\" >> /etc/environment"
