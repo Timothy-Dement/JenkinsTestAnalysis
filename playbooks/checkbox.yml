@@ -14,30 +14,6 @@
     MONGO_PASSWORD: "{{ lookup('env', 'MONGO_PASSWORD') }}"
 
   tasks:
-      
-    # - name: Add Mongodb ppa key
-    #   become: yes
-    #   apt_key:
-    #     keyserver: keyserver.ubuntu.com
-    #     id: 7F0CEB10
-
-    # - name: Add mongodb sources list
-    #   become: yes
-    #   lineinfile:
-    #     dest: /etc/apt/sources.list.d/mongodb-org-3.0.list
-    #     line: "deb http://repo.mongodb.org/apt/ubuntu precise/mongodb-org/3.0 multiverse"
-    #     state: present
-    #     create: yes
-
-    # - name: Install MongoDB
-    #   become: yes
-    #   apt: name={{ item }}=3.0.7 state=present update_cache=yes
-    #   with_items:
-    #     - mongodb-org
-    #     - mongodb-org-server
-    #     - mongodb-org-shell
-    #     - mongodb-org-mongos
-    #     - mongodb-org-tools
 
     - name: Install mongodb pt 1
       shell: "sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5"
@@ -49,6 +25,10 @@
       apt:
         name: mongodb-org
         update_cache: yes
+
+    - name: Install unzip
+      apt:
+        name: unzip
 
     - name: Installing Python-Pip
       apt:
@@ -186,7 +166,7 @@
       service: name=nginx state=started enabled=no
 
     - name: Start the server
-      shell: "pm2 start coverage.js"
+      shell: "pm2 restart coverage.js"
       args:
         chdir: "/home/{{ ansible_ssh_user }}/checkbox.io/server-side/site/"
 
