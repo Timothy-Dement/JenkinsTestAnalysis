@@ -182,10 +182,15 @@
       become: yes
       service: name=nginx state=started enabled=no
 
+    - name: Stop the server if running
+      shell: "pm2 stop all"
+      args:
+        chdir: "/home/{{ ansible_user }}/checkbox.io/server-side/site/"
+
     - name: Start the server
       shell: "pm2 start coverage.js"
       args:
-        chdir: "/home/{{ ansible_ssh_user }}/checkbox.io/server-side/site/"
+        chdir: "/home/{{ ansible_user }}/checkbox.io/server-side/site/"
 
     - name: Get Jenkins crumb
       uri:
