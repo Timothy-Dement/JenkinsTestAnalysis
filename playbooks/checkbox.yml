@@ -63,7 +63,7 @@
 
     - name: Clone Checkbox
       git:
-        repo: "https://sssaha2:casper234@github.ncsu.edu/tmdement/checkbox.io"
+        repo: "https://{{ lookup('env', 'GITHUB_USERNAME') }}:{{ lookup('env', 'GITHUB_PASSWORD') }}@github.ncsu.edu/tmdement/checkbox.io"
         dest: /home/{{ ansible_user }}/checkbox.io
         force: yes
 
@@ -73,10 +73,10 @@
         dest: "/home/{{ ansible_user }}/checkbox.io/server-side/site/"
         force: yes
       with_items:
-        - /Users/sourabhsaha/Documents/courses/devops/DevOpsProject/SharedFolder/JenkinsTestAnalysis/templates/generator.js
-        - /Users/sourabhsaha/Documents/courses/devops/DevOpsProject/SharedFolder/JenkinsTestAnalysis/templates/studies.json
-        - /Users/sourabhsaha/Documents/courses/devops/DevOpsProject/SharedFolder/JenkinsTestAnalysis/templates/votes.json
-        - /Users/sourabhsaha/Documents/courses/devops/DevOpsProject/SharedFolder/JenkinsTestAnalysis/templates/coverage.js
+        - /home/vagrant/share/JenkinsTestAnalysis/templates/generator.js
+        - /home/vagrant/share/JenkinsTestAnalysis/templates/studies.json
+        - /home/vagrant/share/JenkinsTestAnalysis/templates/votes.json
+        - /home/vagrant/share/JenkinsTestAnalysis/templates/coverage.js
 
     - name: Start MongoDB service
       become: yes
@@ -86,37 +86,37 @@
       become: yes
       mongodb_user:
         database: "admin"
-        name: "admin"
-        password: "root"
+        name: "{{ lookup('env', 'MONGO_USER')}}"
+        password: "{{ lookup('env', 'MONGO_PASSWORD')}}"
         roles: readWriteAnyDatabase,dbAdmin,userAdminAnyDatabase
 
     - name: Export MONGO_USER environment variable
       become: yes
-      shell: 'echo "export MONGO_USER=admin" >> /etc/environment'
+      shell: "echo \"export MONGO_USER={{ lookup('env', '')}}\" >> /etc/environment"
 
     - name: Export MONGO_PORT environment variable
       become: yes
-      shell: 'echo "export MONGO_PORT=3002" >> /etc/environment'
+      shell: "echo \"export MONGO_PORT=3002\" >> /etc/environment"
 
     - name: Export MONGO_PASS environment variable
       become: yes
-      shell: 'echo "export MONGO_PASSWORD=root" >> /etc/environment'
+      shell: "echo \"export MONGO_PASSWORD={{ lookup('env', 'MONGO_PASSWORD')}}\" >> /etc/environment"
 
     - name: Export MAIL_SMTP environment variable
       become: yes
-      shell: 'echo "export MAIL_SMTP=smtp.gmail.com" >> /etc/environment'
+      shell: "echo "export MAIL_SMTP=smtp.gmail.com" >> /etc/environment"
 
     - name: Export MAIL_USER environment variable
       become: yes
-      shell: 'echo "export MAIL_USER=csc519devopspipeliners@gmail.com" >> /etc/environment'
+      shell: "echo \"export MAIL_USER={{ lookup('env', 'MAIL_USER') }}\" >> /etc/environment"
 
     - name: Export MAIL_PASSWORD environment variable
       become: yes
-      shell: 'echo "export MAIL_PASSWORD=devops@2018" >> /etc/environment'
+      shell: "echo \"export MAIL_PASSWORD={{ lookup('env', 'MAIL_PASSWORD') }}\" >> /etc/environment"
 
     - name: Export MONGO_IP environment variable
       become: yes
-      shell: 'echo "export MONGO_IP=localhost" >> /etc/environment'
+      shell: "echo \"export MONGO_IP=localhost\" >> /etc/environment"
 
     - name: install packages
       npm:
@@ -125,7 +125,7 @@
 
     - name: update location of public_html into default
       replace:
-        dest: /home/{{ansible_ssh_user}}/checkbox.io/local-conf/default
+        dest: /home/{{ ansible_user }}/checkbox.io/local-conf/default
         regexp: '/Users/gameweld/bitbucket/checkbox.io/checkbox.io/public_html'
         replace: '/home/{{ ansible_user }}/checkbox.io/public_html'
 
