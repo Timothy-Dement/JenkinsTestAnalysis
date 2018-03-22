@@ -2,22 +2,20 @@
     name: '{name}_checkbox_job'
     description: 'Automatically generated test'
     project-type: freestyle
-    scm:
-      - git:
-          url: file://home/{{ ansible_user }}/Checkbox
-          branches:
-            - master
-          wipe-workspace: true
-    triggers:
-      -
     builders:
       - shell: |
-
+             rm -rf *
+             cp -r /home/{{ ansible_user }}/checkbox.io .
+             cd checkbox.io/server-side/site/
+             node generator.js
+             node test.js
+             wget http://localhost:8888/coverage/download
+             unzip download
     publishers:
       - html-publisher:
-          name: 'Checkbox'
-          dir: 'TestGeneration/coverage/lcov-report/TestGeneration'
-          files: 'subject.js.html'
+          name: 'coverage report'
+          dir: 'checkbox.io/server-side/site/lcov-report'
+          files: "index.html"
 
 - job-template:
     name: '{name}_itrust_job'

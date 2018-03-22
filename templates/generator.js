@@ -4,9 +4,36 @@ const fs = require('fs');
 let buf = fs.readFileSync('./server.js', 'utf8');
 let ast = esprima.parseScript(buf);
 
-const jsonForPost =
+const jsonForDesignSurvey =
+[
+    `{ markdown: '{}\\n---\\n# Test' }`
+];
+
+const jsonForCreateStudy =
+[
+    `{ invitecode: '' }`,
+    `{ name: 'Created Survey', description: 'Description for created survey.', studyKind: 'survey', researcherName: 'John Smith', contact: 'test@test.com', awards: [], invitecode: 'RESEARCH', markdown: '# Markdown', token: 'survey_token' }`,
+    `{ name: 'Created Data Study', description: 'Description for created data study.', studyKind: 'dataStudy', researcherName: 'John Smith', contact: 'test@test.com', awards: [], invitecode: 'RESEARCH', markdown: '# Markdown', token: 'data_study_token' }`
+];
+
+const jsonForSubmitVote =
+[
+
+];
+
+const jsonForOpenCloseStudy =
 [
     `{ token : 'token_zero' }`
+];
+
+const jsonForNotifyParticipant =
+[
+    `{ email: '', kind: '' }`,
+    `{ email: 'test@test.com', kind: 'AMZN' }`,
+    `{ email: 'test@test.com', kind: 'SURFACE' }`,
+    `{ email: 'test@test.com', kind: 'IPADMINI' }`,
+    `{ email: 'test@test.com', kind: 'GITHUB' }`,
+    `{ email: 'test@test.com', kind: 'BROWSERSTACK' }`
 ];
 
 const idsForGet =
@@ -58,8 +85,9 @@ testFileString += `// 'GET' CALLS\n\n`;
 
 for (i = 0; i < getCalls.length; i++)
 {
-    testFileString += generateGetRequest(getCalls[i]);
     if (getCalls[i] === '/api/study/vote/status') testFileString += generateGetRequestWithQueries(getCalls[i]);
+
+    testFileString += generateGetRequest(getCalls[i]);
 }
 
 testFileString += `\n// 'GET' CALLS WITH IDS\n\n`;
@@ -76,20 +104,48 @@ testFileString += `\n// 'GET' CALLS WITH TOKENS\n\n`;
 
 for (i = 0; i < getCallsWithTokens.length; i++)
 {
+    if (getCallsWithTokens[i] === '/api/study/admin/assign/') testFileString += generateGetWithTokenRequest(getCallsWithTokens[i], 'token_four');
+
     for (j = 0; j < tokensForGet.length; j++)
     {
         testFileString += generateGetWithTokenRequest(getCallsWithTokens[i], tokensForGet[j]);
     }
-    if (getCallsWithTokens[i] === '/api/study/admin/assign/') testFileString += generateGetWithTokenRequest(getCallsWithTokens[i], 'token_four');
 }
 
 testFileString += `\n// 'POST' CALLS\n\n`;
 
 for (i = 0; i < postCalls.length; i++)
 {
-    for (j = 0; j < jsonForPost.length; j++)
+    if (postCalls[i] === '/api/design/survey')
     {
-        testFileString += generatePostRequest(postCalls[i], jsonForPost[j]);
+        for (j = 0; j < jsonForDesignSurvey.length; j++)
+        {            
+            testFileString += generatePostRequest(postCalls[i], jsonForDesignSurvey[j]);
+        }
+    }
+
+    if (postCalls[i] === '/api/study/admin/open/' || postCalls[i] === '/api/study/admin/close/')
+    {
+        for (j = 0; j < jsonForOpenCloseStudy.length; j++)
+        {
+            testFileString += generatePostRequest(postCalls[i], jsonForOpenCloseStudy[j]);
+        }
+    }
+
+    if (postCalls[i] === '/api/study/admin/notify/')
+    {
+        for (j = 0; j < jsonForNotifyParticipant.length; j++)
+        {
+            testFileString += generatePostRequest(postCalls[i], jsonForNotifyParticipant[j]);
+        }
+    }
+
+    if (postCalls[i] === '/api/study/create')
+    {
+        for (j = 0; j < jsonForCreateStudy.length; j++)
+        {
+            testFileString += generatePostRequest(postCalls[i], jsonForCreateStudy[j]);
+        }
     }
 }
 
@@ -115,7 +171,7 @@ function generateGetWithTokenRequest(callString, token)
 
 function generatePostRequest(callString, json)
 {
-    return `// request( { url: 'http://localhost${callString}', method: 'POST', json: ${json} }, function(error, response, body) { } );\n`;
+    return `request( { url: 'http://localhost${callString}', method: 'POST', json: ${json} }, function(error, response, body) { } );\n`;
 }
 
 fs.writeFileSync('./test.js', testFileString);
