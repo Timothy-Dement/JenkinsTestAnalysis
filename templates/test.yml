@@ -9,7 +9,7 @@
              cd checkbox.io/server-side/site/
              node generator.js
              node test.js
-             wget http://localhost:8888/download
+             wget http://localhost:8888/coverage/download
              unzip download
     publishers:
       - html-publisher:
