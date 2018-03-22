@@ -197,15 +197,15 @@
       register: crumb
     
     - name: Trigger builds
-       uri:
-         method: POST
-         url: "http://127.0.0.1:8081/job/project_checkbox_job/build"
-         user: "{{ lookup('env', 'JENKINS_USERNAME') }}"
-         password: "{{ lookup('env', 'JENKINS_PASSWORD') }}"
-         force_basic_auth: yes
-         status_code: 201
-         headers:
-           Jenkins-Crumb: "{{ crumb.content.split(':')[1] }}"
+      uri:
+        method: POST
+        url: "http://127.0.0.1:8081/job/project_checkbox_job/build"
+        user: "{{ lookup('env', 'JENKINS_USERNAME') }}"
+        password: "{{ lookup('env', 'JENKINS_PASSWORD') }}"
+        force_basic_auth: yes
+        status_code: 201
+        headers:
+          Jenkins-Crumb: "{{ crumb.content.split(':')[1] }}"
 
 #resources: https://docs.mongodb.com/getting-started/shell/tutorial/install-mongodb-on-ubuntu/
 #https://stackoverflow.com/questions/20919222/ansible-hangs-when-starting-node-js-server
