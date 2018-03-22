@@ -101,7 +101,7 @@ EC2.createKeyPair(createKeyPairParams, function(err, data)
                             var runInstanceParams =
                             {
                                 ImageId : 'ami-dc2d10a6',
-                                InstanceType : 't2.medium',
+                                InstanceType : 'm3.xlarge',
                                 MinCount : 1,
                                 MaxCount : 1,
                                 KeyName: 'Jenkins',
