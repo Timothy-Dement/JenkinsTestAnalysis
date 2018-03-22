@@ -187,25 +187,25 @@
       args:
         chdir: "/home/{{ ansible_ssh_user }}/checkbox.io/server-side/site/"
 
-    # - name: Get Jenkins crumb
-    #   uri:
-    #     url: 'http://127.0.0.1:8081/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)'
-    #     user: "{{ lookup('env', 'JENKINS_USERNAME') }}"
-    #     password: "{{ lookup('env', 'JENKINS_PASSWORD') }}"
-    #     force_basic_auth: yes
-    #     return_content: yes
-    #   register: crumb
-    #
-    # - name: Trigger builds
-    #    uri:
-    #      method: POST
-    #      url: "http://127.0.0.1:8081/job/project_checkbox_job/build"
-    #      user: "{{ lookup('env', 'JENKINS_USERNAME') }}"
-    #      password: "{{ lookup('env', 'JENKINS_PASSWORD') }}"
-    #      force_basic_auth: yes
-    #      status_code: 201
-    #      headers:
-    #        Jenkins-Crumb: "{{ crumb.content.split(':')[1] }}"
+    - name: Get Jenkins crumb
+      uri:
+        url: 'http://127.0.0.1:8081/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)'
+        user: "{{ lookup('env', 'JENKINS_USERNAME') }}"
+        password: "{{ lookup('env', 'JENKINS_PASSWORD') }}"
+        force_basic_auth: yes
+        return_content: yes
+      register: crumb
+    
+    - name: Trigger builds
+       uri:
+         method: POST
+         url: "http://127.0.0.1:8081/job/project_checkbox_job/build"
+         user: "{{ lookup('env', 'JENKINS_USERNAME') }}"
+         password: "{{ lookup('env', 'JENKINS_PASSWORD') }}"
+         force_basic_auth: yes
+         status_code: 201
+         headers:
+           Jenkins-Crumb: "{{ crumb.content.split(':')[1] }}"
 
 #resources: https://docs.mongodb.com/getting-started/shell/tutorial/install-mongodb-on-ubuntu/
 #https://stackoverflow.com/questions/20919222/ansible-hangs-when-starting-node-js-server
