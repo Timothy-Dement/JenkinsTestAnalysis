@@ -5,7 +5,7 @@
     builders:
       - shell: |
              rm -rf *
-             cp -r /home/vagrant/checkbox.io .
+             cp -r /home/{{ ansible_user }}/checkbox.io .
              cd checkbox.io/server-side/site/
              node generator.js
              node test.js
