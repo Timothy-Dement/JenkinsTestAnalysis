@@ -4,13 +4,13 @@
     project-type: freestyle
     builders:
       - shell: |
-      rm -rf *
-      cp -r /home/vagrant/checkbox.io .
-      cd checkbox.io/server-side/site/
-      node generator.js
-      node test.js
-      wget http://localhost:8888/download
-      unzip download
+             rm -rf *
+             cp -r /home/vagrant/checkbox.io .
+             cd checkbox.io/server-side/site/
+             node generator.js
+             node test.js
+             wget http://localhost:8888/download
+             unzip download
     publishers:
       - html-publisher:
           name: 'coverage report'
