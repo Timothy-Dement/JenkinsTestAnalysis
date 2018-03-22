@@ -166,7 +166,7 @@
       service: name=nginx state=started enabled=no
 
     - name: Start the server
-      shell: "pm2 restart coverage.js"
+      shell: "pm2 start coverage.js"
       args:
         chdir: "/home/{{ ansible_ssh_user }}/checkbox.io/server-side/site/"
 
