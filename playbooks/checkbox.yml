@@ -104,7 +104,7 @@
 
     - name: Export MAIL_SMTP environment variable
       become: yes
-      shell: "echo "export MAIL_SMTP=smtp.gmail.com" >> /etc/environment"
+      shell: "echo \"export MAIL_SMTP=smtp.gmail.com\" >> /etc/environment"
 
     - name: Export MAIL_USER environment variable
       become: yes
