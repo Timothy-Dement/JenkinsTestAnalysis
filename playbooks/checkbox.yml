@@ -92,7 +92,7 @@
 
     - name: Export MONGO_USER environment variable
       become: yes
-      shell: "echo \"export MONGO_USER={{ lookup('env', '')}}\" >> /etc/environment"
+      shell: "echo \"export MONGO_USER={{ lookup('env', 'MONGO_USER')}}\" >> /etc/environment"
 
     - name: Export MONGO_PORT environment variable
       become: yes
