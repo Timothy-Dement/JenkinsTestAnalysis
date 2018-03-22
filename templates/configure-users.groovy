@@ -25,6 +25,8 @@ if ("{{ lookup('env', 'JENKINS_USERNAME') }}" in users_s)
     user.save()
 
     instance.setInstallState(InstallState.INITIAL_SETUP_COMPLETED)
+
+    System.setProperty("hudson.model.DirectoryBrowserSupport.CSP", "")
 }
 else
 {
@@ -39,4 +41,6 @@ else
     instance.save()
 
     instance.setInstallState(InstallState.INITIAL_SETUP_COMPLETED)
+
+    System.setProperty("hudson.model.DirectoryBrowserSupport.CSP", "")
 }

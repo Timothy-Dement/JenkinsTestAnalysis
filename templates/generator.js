@@ -18,7 +18,7 @@ const jsonForCreateStudy =
 
 const jsonForSubmitVote =
 [
-
+    `{ studyId: '000000000000000000000005', fingerprint: 'fingerprint', answers: '[ { "kind": "single" } ]', email: 'test@test.com', contact: 'test@test.com' }`
 ];
 
 const jsonForOpenCloseStudy =
@@ -145,6 +145,14 @@ for (i = 0; i < postCalls.length; i++)
         for (j = 0; j < jsonForCreateStudy.length; j++)
         {
             testFileString += generatePostRequest(postCalls[i], jsonForCreateStudy[j]);
+        }
+    }
+
+    if (postCalls[i] === '/api/study/vote/submit/')
+    {
+        for (j = 0; j < jsonForSubmitVote.length; j++)
+        {
+            testFileString += generatePostRequest(postCalls[i], jsonForSubmitVote[j]);
         }
     }
 }
